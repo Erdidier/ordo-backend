@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tasks",
+  "info": {
+    "singularName": "task",
+    "pluralName": "tasks",
+    "displayName": "Task",
+    "description": "Tareas personales de un usuario"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "notes": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["draft", "active", "completed", "archived"],
+      "default": "active",
+      "required": true
+    },
+    "priority": {
+      "type": "enumeration",
+      "enum": ["low", "medium", "high"],
+      "required": true
+    },
+    "dueAt": {
+      "type": "datetime"
+    },
+    "completedAt": {
+      "type": "datetime"
+    },
+    "reminderEnabled": {
+      "type": "boolean",
+      "default": false,
+      "required": "true"
+    },
+    "reminderOffsetMinutes": {
+      "type": "integer",
+      "min": 1,
+      "max": 525600
+    },
+    "reminderSentAt": {
+      "type": "datetime"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "tasks"
+    },
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "tasks"
+    }
+  }
+}
