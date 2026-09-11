@@ -1,0 +1,19 @@
+# Ignore artifacts:
+dist
+build
+.strapi
+.tmp
+.cache
+
+# Standard
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+public/
+types/
+
+# lockfiles
+pnpm-lock-yaml
+yarn.lock
+package-lock.json
