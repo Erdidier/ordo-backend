@@ -22,6 +22,7 @@
     "@strapi/plugin-graphql": "^5.53.0",
     "@strapi/plugin-users-permissions": "5.52.3",
     "@strapi/strapi": "5.52.3",
+    "@strapi/utils": "^5.53.0",
     "better-sqlite3": "12.8.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
