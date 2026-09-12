@@ -11,7 +11,7 @@ build
 **/.hg
 **/node_modules
 public/
-types/
+types/generated/
 
 # lockfiles
 pnpm-lock-yaml
