@@ -12,7 +12,12 @@
     "start": "strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry",
+    "format:check": "prettier --check 'src/**/*.{js,ts,json}'",
+    "format": "prettier --write 'src/**/*.{js,ts,json}'",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "@strapi/database": "5.52.3",
@@ -20,6 +25,7 @@
     "@strapi/plugin-graphql": "^5.53.0",
     "@strapi/plugin-users-permissions": "5.52.3",
     "@strapi/strapi": "5.52.3",
+    "@strapi/utils": "^5.53.0",
     "better-sqlite3": "12.8.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
@@ -27,10 +33,15 @@
     "styled-components": "^6.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "typescript": "^5"
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "3.9.6",
+    "typescript": "^5",
+    "typescript-eslint": "^8.70.0"
   },
   "engines": {
     "node": ">=20.0.0 <=26.x.x",
