@@ -1,14 +1,16 @@
 'use strict';
 
 import { errors } from '@strapi/utils';
-import { factories } from '@strapi/strapi';
+import { factories, Data } from '@strapi/strapi';
 
 const { NotFoundError, ForbiddenError, ValidationError } = errors;
+
+type Task = Data.ContentType<'api::task.task'>;
 
 module.exports = factories.createCoreService(
   'api::task.task',
   ({ strapi }) => ({
-    async createForUser(userId, data) {
+    async createForUser(userId: string, data: Task) {
       this.assertOwnershipOfTags(data.tags, userId);
 
       const payload = this.applyBusinessRules(data);
@@ -19,7 +21,11 @@ module.exports = factories.createCoreService(
         populate: ['images', 'tags', 'owner'],
       });
     },
-    async updateForUser(documentId, userId, data) {
+    async updateForUser(
+      documentId: Data.DocumentID,
+      userId: string,
+      data: Task
+    ) {
       const existing = await this.findOwnedOrThrow(documentId, userId);
 
       if (data?.tags) {
@@ -36,14 +42,14 @@ module.exports = factories.createCoreService(
         populate: ['images', 'tags', 'owner'],
       });
     },
-    async deleteForUser(documentId, userId) {
+    async deleteForUser(documentId: Data.DocumentID, userId: string) {
       const existing = await this.findOwnedOrThrow(documentId, userId);
 
       return strapi.documents('api::task.task').delete({
         documentId: existing.id,
       });
     },
-    async findOwnedOrThrow(documentId, userId) {
+    async findOwnedOrThrow(documentId: Data.DocumentID, userId: string) {
       const task = await strapi.db.query('api::task.task').findOne({
         where: { documentId, owner: userId },
       });
@@ -54,7 +60,7 @@ module.exports = factories.createCoreService(
 
       return task;
     },
-    async assertOwnershipOfTags(tagIds = [], userId) {
+    async assertOwnershipOfTags(tagIds: Array<string> = [], userId: string) {
       if (!tagIds || tagIds.length === 0) return;
 
       const count = await strapi.db.query('api::tag.tag').count({
@@ -65,7 +71,7 @@ module.exports = factories.createCoreService(
         throw new ForbiddenError('Una o más etiquetas no te pertenecen');
       }
     },
-    applyBusinessRules(data, existing = {}) {
+    applyBusinessRules(data: Task, existing = {}) {
       const merged = { ...existing, ...data };
 
       if (data.status === 'completed' && existing.status !== 'completed') {
