@@ -10,7 +10,7 @@ type Task = Data.ContentType<'api::task.task'>;
 module.exports = factories.createCoreService(
   'api::task.task',
   ({ strapi }) => ({
-    async createForUser(userId: string, data: Task) {
+    async createForUser(userId: string, data: Partial<Task>) {
       this.assertOwnershipOfTags(data.tags, userId);
 
       const payload = this.applyBusinessRules(data);
@@ -24,7 +24,7 @@ module.exports = factories.createCoreService(
     async updateForUser(
       documentId: Data.DocumentID,
       userId: string,
-      data: Task
+      data: Partial<Task>
     ) {
       const existing = await this.findOwnedOrThrow(documentId, userId);
 
@@ -49,7 +49,10 @@ module.exports = factories.createCoreService(
         documentId: existing.id,
       });
     },
-    async findOwnedOrThrow(documentId: Data.DocumentID, userId: string) {
+    async findOwnedOrThrow(
+      documentId: Data.DocumentID,
+      userId: string
+    ): Promise<Task> {
       const task = await strapi.db.query('api::task.task').findOne({
         where: { documentId, owner: userId },
       });
@@ -60,7 +63,10 @@ module.exports = factories.createCoreService(
 
       return task;
     },
-    async assertOwnershipOfTags(tagIds: Array<string> = [], userId: string) {
+    async assertOwnershipOfTags(
+      tagIds: Array<string> = [],
+      userId: string
+    ): Promise<void> {
       if (!tagIds || tagIds.length === 0) return;
 
       const count = await strapi.db.query('api::tag.tag').count({
@@ -71,7 +77,10 @@ module.exports = factories.createCoreService(
         throw new ForbiddenError('Una o más etiquetas no te pertenecen');
       }
     },
-    applyBusinessRules(data: Task, existing = {}) {
+    applyBusinessRules(
+      data: Partial<Task>,
+      existing: Partial<Task> = {}
+    ): Partial<Task> {
       const merged = { ...existing, ...data };
 
       if (data.status === 'completed' && existing.status !== 'completed') {
